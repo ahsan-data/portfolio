@@ -131,7 +131,7 @@ Power BI • SQL • Excel
 
 **Repository**
 
-https://github.com/ahsanxdata360
+https://github.com/ahsan-data
 
 ---
 
@@ -180,7 +180,7 @@ https://github.com/ahsan-data/portfolio
 https://www.linkedin.com/in/ahsanxdata/
 
 **GitHub**  
-https://github.com/ahsanxdata360
+https://github.com/ahsan-data
 
 **Email**  
 ahsanxdata@gmail.com
