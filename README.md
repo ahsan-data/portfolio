@@ -9,7 +9,7 @@
   <a href="mailto:ahsanxdata@gmail.com">
     <img src="https://img.shields.io/badge/Email-Contact-green?style=for-the-badge&logo=gmail&logoColor=white">
   </a>
-  <a href="https://ahsan-chowdhury.github.io/">
+  <a href="https://github.com/ahsan-data/portfolio">
     <img src="https://img.shields.io/badge/Portfolio-Visit%20Website-2563EB?style=for-the-badge">
   </a>
 </p>
@@ -25,7 +25,7 @@ I enjoy working with data to answer questions, identify patterns and present inf
 This portfolio showcases the projects I've built, the skills I'm developing and the work I enjoy creating as I continue growing in data analytics.
 
 🌐 **Portfolio**  
-https://ahsan-chowdhury.github.io/
+https://github.com/ahsan-data/portfolio
 
 ---
 
@@ -174,7 +174,7 @@ Currently working toward industry-recognized certifications while continuing to 
 # Let's Connect
 
 **Portfolio**  
-https://ahsan-chowdhury.github.io/
+https://github.com/ahsan-data/portfolio
 
 **LinkedIn**  
 https://www.linkedin.com/in/ahsanxdata/
