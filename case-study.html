@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en" x-data="{
+  dark: localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches),
+  scrolled: false,
+  mobileMenu: false,
+  progress: 0
+}" :class="{ 'dark': dark }" x-init="
+  $watch('dark', value => localStorage.setItem('theme', value ? 'dark' : 'light'));
+
+  window.addEventListener('scroll', () => {
+    scrolled = window.scrollY > 20;
+    progress = Math.min(
+      100,
+      Math.round(
+        (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100
+      )
+    );
+  }, { passive: true });
+" class="scroll-smooth">
+
+<head>
+
+  <!-- Character Encoding -->
+  <meta charset="UTF-8">
+
+  <!-- Responsive -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- SEO -->
+  <meta name="description"
+    content="Explore a real-world data analytics case study by Ahsan Chowdhury, showcasing SQL, Power BI, dashboard design, business intelligence, and actionable insights.">
+
+  <meta name="keywords"
+    content="Ahsan Chowdhury, Data Analytics Case Study, SQL Dashboard, Power BI Dashboard, Business Intelligence, Portfolio">
+
+  <meta name="author" content="Ahsan Chowdhury">
+
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Data Analytics Case Study | Ahsan Chowdhury">
+
+  <meta property="og:description"
+    content="Discover how business data was transformed into interactive dashboards and actionable insights using SQL and Power BI.">
+
+  <meta property="og:type" content="article">
+
+  <meta property="og:url" content="https://yourdomain.com/case-study.html">
+
+  <meta property="og:image" content="https://yourdomain.com/assets/images/og-case-study.jpg">
+
+  <!-- Browser Theme -->
+  <meta name="theme-color" content="#2563EB">
+
+  <!-- Title -->
+  <title>Data Analytics Case Study | Ahsan Chowdhury</title>
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+
+  <!-- Performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap"
+    rel="stylesheet">
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Alpine -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+  <!-- Tailwind Config -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['PT Sans', 'sans-serif'],
+            body: ['DM Sans', 'sans-serif']
+          },
+          colors: {
+            accent: '#2563EB',
+            'accent-light': '#60A5FA'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box
+    }
+
+    html,
+    body {
+      font-family: 'DM Sans', sans-serif
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-family: 'PT Sans', sans-serif
+    }
+
+    body {
+      transition: background-color .3s, color .3s
+    }
+
+    /* noise overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: .35;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.05'/%3E%3C/svg%3E")
+    }
+
+    /* scrollbar */
+    ::-webkit-scrollbar {
+      width: 5px
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #2563EB;
+      border-radius: 99px
+    }
+
+    /* reveal on scroll */
+    .reveal {
+      opacity: 0;
+      transform: translateY(26px);
+      transition: opacity .6s cubic-bezier(.4, 0, .2, 1), transform .6s cubic-bezier(.4, 0, .2, 1)
+    }
+
+    .reveal.in {
+      opacity: 1;
+      transform: none
+    }
+
+    .d1 {
+      transition-delay: .08s
+    }
+
+    .d2 {
+      transition-delay: .16s
+    }
+
+    .d3 {
+      transition-delay: .24s
+    }
+
+    .d4 {
+      transition-delay: .32s
+    }
+
+    /* nav underline animation */
+    .nl {
+      position: relative
+    }
+
+    .nl::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 1.5px;
+      background: currentColor;
+      transition: width .22s cubic-bezier(.4, 0, .2, 1)
+    }
+
+    .nl:hover::after,
+    .nl.on::after {
+      width: 100%
+    }
+
+    .nl.on {
+      font-weight: 500
+    }
+
+    /* shimmer button */
+    .shimmer {
+      position: relative;
+      overflow: hidden
+    }
+
+    .shimmer::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 60%;
+      height: 100%;
+      background: rgba(255, 255, 255, .18);
+      transform: skewX(-20deg);
+      transition: left .4s cubic-bezier(.4, 0, .2, 1)
+    }
+
+    .shimmer:hover::after {
+      left: 160%
+    }
+
+    /* photo frames */
+    .pf {
+      overflow: hidden;
+      background: #d4d4d8
+    }
+
+    .pf img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+    }
+
+    /* card hover */
+    .card-h {
+      transition: transform .28s cubic-bezier(.4, 0, .2, 1), border-color .18s
+    }
+
+    .card-h:hover {
+      transform: translateY(-4px)
+    }
+
+    /* skill tag */
+    .stag {
+      transition: border-color .18s
+    }
+
+    [x-cloak] {
+      display: none !important
+    }
+  </style>
+</head>
+
+<body class="bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 antialiased">
+
+  <!-- ═══ NAV ═══ -->
+  <header class="fixed inset-x-0 top-0 z-50 transition-all duration-300"
+    :class="sc?'bg-white/90 dark:bg-zinc-950/90 backdrop-blur-md shadow-sm shadow-black/5':''">
+    <nav class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between" aria-label="Main navigation">
+
+      <!-- Logo -->
+      <a href="index.html" class="relative z-10 flex items-center">
+        <img src="assets/images/logo/AhsanXdata-logo.png" alt="AhsanXData Logo" class="h-10 w-auto">
+      </a>
+
+      <ul class="hidden md:flex items-center gap-8 text-sm" role="list">
+
+        <li><a href="#about"
+            class="nl text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors"
+            :class="s==='about'?'on !text-zinc-900 dark:!text-white':''">About</a></li>
+        <li><a href="#skills"
+            class="nl text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors"
+            :class="s==='skills'?'on !text-zinc-900 dark:!text-white':''">Skills</a></li>
+        <li><a href="#projects"
+            class="nl text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors"
+            :class="s==='projects'?'on !text-zinc-900 dark:!text-white':''">Projects</a></li>
+        <li><a href="#certificates"
+            class="nl text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors"
+            :class="s==='certificates'?'on !text-zinc-900 dark:!text-white':''">Certificates</a></li>
+        <li><a href="#blog"
+            class="nl text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors"
+            :class="s==='blog'?'on !text-zinc-900 dark:!text-white':''">Blog</a></li>
+        <li><a href="#contact"
+            class="nl text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors"
+            :class="s==='contact'?'on !text-zinc-900 dark:!text-white':''">Contact</a></li>
+      </ul>
+
+      <div class="flex items-center gap-3">
+        <!-- dark toggle -->
+        <button @click="dark=!dark"
+          class="w-9 h-9 flex items-center justify-center rounded-full border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors"
+          :aria-label="dark?'Light mode':'Dark mode'">
+          <svg x-show="!dark" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+          </svg>
+          <svg x-show="dark" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M17.657 17.657l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
+          </svg>
+        </button>
+        <!-- hire me -->
+        <a href="assets/resume/Ahsan_Chowdhury_Data_Analyst_Resume.pdf" target="_blank"
+          class="hidden md:inline-flex items-center gap-2 shimmer bg-accent text-white text-sm font-medium px-5 py-2 rounded-full hover:bg-[#0F172A] transition-colors duration-300">
+          Download Resume
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 5v10m0 0l-4-4m4 4l4-4M5 19h14" />
+          </svg>
+        </a>
+        <!-- hamburger -->
+        <button @click="mm=!mm"
+          class="md:hidden w-9 h-9 flex items-center justify-center rounded-full border border-zinc-200 dark:border-zinc-800"
+          :aria-expanded="mm" aria-label="Toggle menu">
+          <svg x-show="!mm" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+          <svg x-show="mm" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </nav>
+
+    <!-- mobile menu -->
+    <div x-show="mm" x-cloak x-transition:enter="transition ease-out duration-200"
+      x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
+      x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0"
+      x-transition:leave-end="opacity-0 -translate-y-2"
+      class="md:hidden bg-white dark:bg-zinc-950 border-t border-zinc-100 dark:border-zinc-900">
+      <ul class="flex flex-col px-6 py-5 gap-4 text-sm font-medium" role="list">
+        <li><a href="#about" @click="mm=false"
+            class="block text-zinc-700 dark:text-zinc-300 hover:text-accent transition-colors">About</a></li>
+        <li><a href="#skills" @click="mm=false"
+            class="block text-zinc-700 dark:text-zinc-300 hover:text-accent transition-colors">Skills</a></li>
+        <li><a href="#projects" @click="mm=false"
+            class="block text-zinc-700 dark:text-zinc-300 hover:text-accent transition-colors">Projects</a></li>
+        <li><a href="#certificates" @click="mm=false"
+            class="block text-zinc-700 dark:text-zinc-300 hover:text-accent transition-colors">Certificates</a></li>
+        <li><a href="#blog" @click="mm=false"
+            class="block text-zinc-700 dark:text-zinc-300 hover:text-accent transition-colors">Blog</a></li>
+        <li><a href="#contact" @click="mm=false"
+            class="block text-zinc-700 dark:text-zinc-300 hover:text-accent transition-colors">Contact</a></li>
+        <li class="pt-2 border-t border-zinc-100 dark:border-zinc-900">
+          <a href="assets/resume/Ahsan_Chowdhury_Data_Analyst_Resume.pdf" target="_blank" @click="mm=false"
+            class="inline-flex shimmer bg-accent text-white font-medium text-sm px-5 py-2.5 rounded-full hover:bg-[#0F172A] transition-colors duration-300">
+            Download Resume →
+          </a>
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ═══ CASE STUDY HEADER ═══ -->
+    <article>
+
+      <header class="pt-32 pb-12 max-w-4xl mx-auto px-6">
+
+        <!-- Back -->
+        <a href="projects.html"
+          class="inline-flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400 hover:text-accent transition-colors mb-8">
+
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+            aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
+          </svg>
+
+          Back to Projects
+
+        </a>
+
+        <!-- Categories -->
+        <div class="flex flex-wrap items-center gap-3 mb-6">
+
+          <span
+            class="text-xs bg-blue-50 dark:bg-zinc-800 text-accent border border-blue-200 dark:border-zinc-700 px-3 py-1 rounded-full">
+            Data Analytics
+          </span>
+
+          <span class="text-xs bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 px-3 py-1 rounded-full">
+            Dashboard
+          </span>
+
+          <span class="text-xs bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 px-3 py-1 rounded-full">
+            Case Study
+          </span>
+
+          <span class="text-xs text-zinc-400">
+            August 2026
+          </span>
+
+        </div>
+
+        <!-- Title -->
+        <h1
+          class="reveal font-display font-bold text-4xl md:text-5xl lg:text-6xl leading-tight text-zinc-900 dark:text-white mb-6">
+
+          Sales Performance Dashboard for Executive Decision-Making
+
+        </h1>
+
+        <!-- Intro -->
+        <p class="reveal d1 text-xl text-zinc-500 dark:text-zinc-400 leading-relaxed max-w-3xl mb-10">
+
+          Designed an interactive business intelligence dashboard that transformed raw sales data into actionable
+          insights,
+          enabling stakeholders to monitor KPIs, identify trends, and make faster data-driven decisions.
+
+        </p>
+
+        <!-- Project Information -->
+        <div class="reveal d2 grid grid-cols-2 md:grid-cols-4 gap-6 py-8 border-y border-zinc-200 dark:border-zinc-800">
+
+          <div>
+            <p class="text-xs uppercase tracking-widest text-zinc-400 mb-1">
+              Client
+            </p>
+
+            <p class="text-sm font-medium text-zinc-900 dark:text-white">
+              Confidential
+            </p>
+          </div>
+
+          <div>
+            <p class="text-xs uppercase tracking-widest text-zinc-400 mb-1">
+              Industry
+            </p>
+
+            <p class="text-sm font-medium text-zinc-900 dark:text-white">
+              Retail & E-commerce
+            </p>
+          </div>
+
+          <div>
+            <p class="text-xs uppercase tracking-widest text-zinc-400 mb-1">
+              Duration
+            </p>
+
+            <p class="text-sm font-medium text-zinc-900 dark:text-white">
+              6 Weeks
+            </p>
+          </div>
+
+          <div>
+            <p class="text-xs uppercase tracking-widest text-zinc-400 mb-1">
+              Tools
+            </p>
+
+            <p class="text-sm font-medium text-zinc-900 dark:text-white">
+              Power BI • Excel • SQL
+            </p>
+          </div>
+
+        </div>
+
+      </header>
+
+      <!-- ═══ HERO IMAGE ═══ -->
+      <div class="max-w-6xl mx-auto px-6 mb-16">
+        <div class="reveal photo-frame w-full h-72 md:h-[500px] rounded-3xl overflow-hidden">
+          <img src="assets/images/projects/project-cover.jpg" alt="Project Cover Image" loading="eager"
+            class="w-full h-full object-cover" />
+        </div>
+      </div>
+
+      <!-- ═══ PROJECT HIGHLIGHTS ═══ -->
+      <div class="max-w-5xl mx-auto px-6 mb-16">
+
+        <div class="reveal grid grid-cols-2 lg:grid-cols-4 gap-5">
+
+          <div class="stat-card bg-zinc-50 dark:bg-zinc-900 rounded-2xl p-6">
+            <p class="font-display font-bold text-3xl text-accent">
+              +38%
+            </p>
+
+            <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-2">
+              Faster Decision Making
+            </p>
+          </div>
+
+          <div class="stat-card bg-zinc-50 dark:bg-zinc-900 rounded-2xl p-6">
+            <p class="font-display font-bold text-3xl text-accent">
+              -72%
+            </p>
+
+            <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-2">
+              Manual Reporting Time
+            </p>
+          </div>
+
+          <div class="stat-card bg-zinc-50 dark:bg-zinc-900 rounded-2xl p-6">
+            <p class="font-display font-bold text-3xl text-accent">
+              100+
+            </p>
+
+            <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-2">
+              Automated Reports
+            </p>
+          </div>
+
+          <div class="stat-card bg-zinc-50 dark:bg-zinc-900 rounded-2xl p-6">
+            <p class="font-display font-bold text-3xl text-accent">
+              6 Weeks
+            </p>
+
+            <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-2">
+              Project Delivery
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ═══ CASE STUDY CONTENT ═══ -->
+
+      <div class="max-w-3xl mx-auto px-6 pb-6 prose-cs">
+
+        <h2>Project Overview</h2>
+
+        <p>
+          This project focused on transforming raw business data into actionable insights
+          through data cleaning, analysis, visualization, and interactive reporting.
+          The objective was to help stakeholders make faster, data-driven decisions
+          using accurate and meaningful business metrics.
+        </p>
+
+        <blockquote>
+          <p>
+            "Good analytics doesn't just explain what happened. It reveals why it happened
+            and what should happen next."
+          </p>
+        </blockquote>
+
+        <h2>Business Problem</h2>
+
+        <p>
+          The organization had large volumes of operational data spread across multiple
+          sources, making reporting slow, inconsistent, and difficult to interpret.
+          Decision-makers lacked a centralized dashboard for monitoring business
+          performance.
+        </p>
+
+        <ul>
+          <li>Scattered data across multiple files and systems</li>
+          <li>Manual reporting consumed significant time</li>
+          <li>Limited visibility into business KPIs</li>
+          <li>Difficulty identifying trends and performance issues</li>
+        </ul>
+
+        <h2>Data Collection & Analysis</h2>
+
+        <p>
+          The project began with collecting, validating, cleaning, and transforming
+          datasets before performing exploratory data analysis. Statistical techniques
+          and business logic were applied to uncover trends, patterns, and performance
+          indicators.
+        </p>
+
+      </div>
+
+      <!-- Analytics Image -->
+
+      <div class="max-w-5xl mx-auto px-6 mb-6">
+
+        <div class="reveal photo-frame w-full h-64 md:h-96 rounded-2xl">
+
+          <img src="assets/images/projects/data-analysis.jpg" alt="Data analysis and business dashboard" loading="lazy">
+
+        </div>
+
+        <p class="img-caption">
+          Data preparation, analysis, and business intelligence workflow.
+        </p>
+
+      </div>
+
+      <div class="max-w-3xl mx-auto px-6 pb-6 prose-cs">
+
+        <h2>Analytical Approach</h2>
+
+        <p>
+          A structured analytical process was followed to ensure data quality,
+          accurate reporting, and meaningful visualization for business stakeholders.
+        </p>
+
+      </div>
+
+      <!-- 3-column Process -->
+
+      <div class="max-w-5xl mx-auto px-6 mb-14">
+
+        <div class="reveal grid md:grid-cols-3 gap-6">
+
+          <div class="bg-zinc-50 dark:bg-zinc-900 rounded-2xl p-7 border border-zinc-200 dark:border-zinc-800">
+
+            <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-zinc-800 flex items-center justify-center mb-4">
+
+              📊
+
+            </div>
+
+            <h3 class="font-display font-bold text-lg mb-3">
+              Data Preparation
+            </h3>
+
+            <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
+              Cleaned, transformed, and validated raw datasets to ensure accuracy
+              before analysis.
+            </p>
+
+          </div>
+
+          <div class="bg-zinc-50 dark:bg-zinc-900 rounded-2xl p-7 border border-zinc-200 dark:border-zinc-800">
+
+            <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-zinc-800 flex items-center justify-center mb-4">
+
+              📈
+
+            </div>
+
+            <h3 class="font-display font-bold text-lg mb-3">
+              Data Analysis
+            </h3>
+
+            <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
+              Explored trends, identified patterns, measured KPIs, and generated
+              insights to support business decisions.
+            </p>
+
+          </div>
+
+          <div class="bg-zinc-50 dark:bg-zinc-900 rounded-2xl p-7 border border-zinc-200 dark:border-zinc-800">
+
+            <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-zinc-800 flex items-center justify-center mb-4">
+
+              📉
+
+            </div>
+
+            <h3 class="font-display font-bold text-lg mb-3">
+              Dashboard & Reporting
+            </h3>
+
+            <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
+              Built interactive dashboards and automated reports to enable
+              real-time monitoring of business performance.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+      <div class="max-w-3xl mx-auto px-6 pb-4 prose-cs">
+
+        <h2>Project Workflow</h2>
+        <h3>From Raw Data to Actionable Insights</h3>
+
+        <p>
+          Every dashboard project follows a structured workflow designed to ensure
+          data accuracy, meaningful analysis, and clear business communication.
+          Beginning with data collection and preparation, the process continues
+          through modeling, visualization, and insight generation to create
+          dashboards that support confident, data-driven decisions.
+        </p>
+
+      </div>
+
+      <!-- Workflow Steps -->
+      <div class="max-w-4xl mx-auto px-6 mb-12">
+        <div class="reveal space-y-4">
+
+          <!-- Step 1 -->
+          <div
+            class="flex gap-5 bg-zinc-50 dark:bg-zinc-900 rounded-2xl p-6 border border-zinc-100 dark:border-zinc-800">
+            <div class="step-badge shrink-0 mt-0.5">1</div>
+            <div>
+              <p class="font-display font-bold text-zinc-900 dark:text-white mb-1">
+                Data Collection
+              </p>
+              <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                Gather data from multiple sources including Excel, SQL databases,
+                CSV files, and business systems to create a reliable foundation
+                for analysis.
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div
+            class="flex gap-5 bg-zinc-50 dark:bg-zinc-900 rounded-2xl p-6 border border-zinc-100 dark:border-zinc-800">
+            <div class="step-badge shrink-0 mt-0.5">2</div>
+            <div>
+              <p class="font-display font-bold text-zinc-900 dark:text-white mb-1">
+                Data Cleaning & Preparation
+              </p>
+              <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                Remove duplicates, handle missing values, standardize formats,
+                and transform raw datasets into clean, analysis-ready data.
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div
+            class="flex gap-5 bg-zinc-50 dark:bg-zinc-900 rounded-2xl p-6 border border-zinc-100 dark:border-zinc-800">
+            <div class="step-badge shrink-0 mt-0.5">3</div>
+            <div>
+              <p class="font-display font-bold text-zinc-900 dark:text-white mb-1">
+                Data Modeling
+              </p>
+              <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                Build relationships, create calculated measures using DAX,
+                and organize datasets for accurate reporting and performance.
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 4 -->
+          <div
+            class="flex gap-5 bg-zinc-50 dark:bg-zinc-900 rounded-2xl p-6 border border-zinc-100 dark:border-zinc-800">
+            <div class="step-badge shrink-0 mt-0.5">4</div>
+            <div>
+              <p class="font-display font-bold text-zinc-900 dark:text-white mb-1">
+                Dashboard Development
+              </p>
+              <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                Design interactive dashboards with KPIs, charts, filters,
+                and drill-through reports that simplify complex business data.
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 5 -->
+          <div
+            class="flex gap-5 bg-zinc-50 dark:bg-zinc-900 rounded-2xl p-6 border border-zinc-100 dark:border-zinc-800">
+            <div class="step-badge shrink-0 mt-0.5">5</div>
+            <div>
+              <p class="font-display font-bold text-zinc-900 dark:text-white mb-1">
+                Business Insights & Reporting
+              </p>
+              <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                Transform dashboard findings into actionable recommendations
+                that help stakeholders monitor performance and make informed
+                business decisions.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Dashboard Preview -->
+      <div class="max-w-5xl mx-auto px-6 mb-4">
+        <div class="reveal photo-frame w-full h-56 md:h-80 rounded-2xl">
+          <img src="images/projects/dashboard-preview.webp" alt="Interactive Power BI dashboard" loading="lazy">
+        </div>
+
+        <p class="img-caption">
+          Interactive business dashboard featuring KPIs, trend analysis,
+          filters, and data visualizations built using Power BI.
+        </p>
+      </div>
+
+
+      <!-- ═══ DASHBOARD SHOWCASE ═══ -->
+      <div class="max-w-5xl mx-auto px-6 mb-12">
+        <div class="reveal grid md:grid-cols-2 gap-4">
+
+          <div>
+            <div class="photo-frame w-full h-52 rounded-2xl">
+              <img src="images/dashboard-overview.webp" alt="Interactive Business Dashboard" loading="lazy">
+            </div>
+            <p class="img-caption mt-2">
+              Executive dashboard showing KPI trends, revenue, and performance insights.
+            </p>
+          </div>
+
+          <div>
+            <div class="photo-frame w-full h-52 rounded-2xl">
+              <img src="images/dashboard-detail.webp" alt="Detailed Analytics Dashboard" loading="lazy">
+            </div>
+            <p class="img-caption mt-2">
+              Interactive drill-down dashboard with filters, segmentation, and forecasting.
+            </p>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="max-w-3xl mx-auto px-6 pb-16 prose-cs">
+
+        <h2>Project Highlights</h2>
+
+        <h3>Business Problem</h3>
+        <p>
+          The client relied on multiple spreadsheets and disconnected reports, making it difficult to monitor
+          performance or identify growth opportunities. Decision-making was slow because key metrics were spread
+          across different systems.
+        </p>
+
+        <h3>My Approach</h3>
+        <p>
+          I consolidated data from multiple sources, cleaned and transformed the datasets, then designed an
+          interactive dashboard that provides real-time business insights. The dashboard focuses on clarity,
+          usability, and actionable KPIs rather than overwhelming users with unnecessary information.
+        </p>
+
+        <h3>Tools Used</h3>
+        <p>
+          Power BI, Excel, SQL, Python, Google Analytics 4, Looker Studio, and Microsoft Fabric were used for
+          data preparation, visualization, automation, and reporting.
+        </p>
+
+        <h2>Project Outcomes</h2>
+
+        <ul>
+          <li><strong>Automated reporting</strong> to eliminate repetitive manual work.</li>
+          <li><strong>Interactive dashboards</strong> with dynamic filters and drill-down analysis.</li>
+          <li><strong>Clear KPI tracking</strong> for executives and operational teams.</li>
+          <li><strong>Improved decision-making</strong> through centralized business insights.</li>
+          <li><strong>Custom visualizations</strong> tailored to business goals and stakeholders.</li>
+          <li><strong>Scalable reporting framework</strong> for future business growth.</li>
+        </ul>
+
+        <blockquote>
+          <p>
+            "The dashboard transformed our reporting process. We now monitor business performance in real time
+            and make faster, data-driven decisions."
+          </p>
+        </blockquote>
+
+        <h2>Key Takeaway</h2>
+
+        <p>
+          Great dashboards are more than attractive charts. They simplify complex data, highlight meaningful
+          insights, and help organizations make confident decisions faster.
+        </p>
+
+        <hr>
+
+        <p>
+          <em>
+            Looking for a custom analytics dashboard or reporting solution?
+            <a href="index.html#contact">Let's discuss your project.</a>
+          </em>
+        </p>
+
+      </div>
+
+    </article>
+
+    <article
+      class="reveal card-h group bg-white dark:bg-zinc-900 rounded-2xl overflow-hidden border border-zinc-100 dark:border-zinc-800 hover:border-accent transition-colors">
+      <div class="photo-frame w-full h-44">
+        <img src="assets/images/project-dashboard.jpg" alt="Executive Sales Dashboard" loading="lazy" />
+      </div>
+      <div class="p-5">
+        <div class="flex gap-2 mb-2">
+          <span
+            class="text-xs bg-orange-50 dark:bg-zinc-800 text-accent border border-orange-200 dark:border-zinc-700 px-2.5 py-1 rounded-full">
+            Power BI
+          </span>
+        </div>
+        <a href="project-dashboard.html">
+          <h3
+            class="font-display font-bold text-base text-zinc-900 dark:text-white mb-2 group-hover:text-accent transition-colors">
+            Executive Sales Dashboard
+          </h3>
+        </a>
+        <a href="project-dashboard.html" class="text-sm font-medium text-accent nav-link">
+          View case study →
+        </a>
+      </div>
+    </article>
+
+    <article
+      class="reveal card-h group bg-white dark:bg-zinc-900 rounded-2xl overflow-hidden border border-zinc-100 dark:border-zinc-800 hover:border-accent transition-colors">
+      <div class="photo-frame w-full h-44">
+        <img src="assets/images/project-python.jpg" alt="Customer Churn Analysis" loading="lazy" />
+      </div>
+      <div class="p-5">
+        <div class="flex gap-2 mb-2">
+          <span class="text-xs bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 px-2.5 py-1 rounded-full">
+            Python
+          </span>
+        </div>
+        <a href="project-churn.html">
+          <h3
+            class="font-display font-bold text-base text-zinc-900 dark:text-white mb-2 group-hover:text-accent transition-colors">
+            Customer Churn Analysis
+          </h3>
+        </a>
+        <a href="project-churn.html" class="text-sm font-medium text-accent nav-link">
+          View case study →
+        </a>
+      </div>
+    </article>
+
+    <article
+      class="reveal card-h group bg-white dark:bg-zinc-900 rounded-2xl overflow-hidden border border-zinc-100 dark:border-zinc-800 hover:border-accent transition-colors">
+      <div class="photo-frame w-full h-44">
+        <img src="assets/images/project-sql.jpg" alt="Retail Sales Analytics" loading="lazy" />
+      </div>
+      <div class="p-5">
+        <div class="flex gap-2 mb-2">
+          <span class="text-xs bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 px-2.5 py-1 rounded-full">
+            SQL
+          </span>
+        </div>
+        <a href="project-retail.html">
+          <h3
+            class="font-display font-bold text-base text-zinc-900 dark:text-white mb-2 group-hover:text-accent transition-colors">
+            Retail Sales Analytics
+          </h3>
+        </a>
+        <a href="project-retail.html" class="text-sm font-medium text-accent nav-link">
+          View case study →
+        </a>
+      </div>
+    </article>
+
+    </div>
+
+    <div class="text-center mt-8 md:hidden">
+      <a href="projects.html" class="text-sm font-medium text-accent">
+        View all projects →
+      </a>
+    </div>
+
+    </div>
+    </section>
+
+    <!-- ═══ CTA ═══ -->
+    <section class="py-24">
+      <div class="max-w-6xl mx-auto px-6">
+        <div class="bg-zinc-900 dark:bg-zinc-800 rounded-3xl p-10 md:p-14 text-center relative overflow-hidden">
+
+          <div class="absolute top-0 right-0 w-64 h-64 bg-accent/20 rounded-full blur-3xl pointer-events-none"></div>
+          <div class="absolute bottom-0 left-0 w-40 h-40 bg-accent/10 rounded-full blur-2xl pointer-events-none"></div>
+
+          <div class="relative z-10">
+            <p class="text-xs font-medium text-accent tracking-widest uppercase mb-4">
+              Let's work together
+            </p>
+
+            <h2 class="font-display font-bold text-3xl md:text-4xl text-white mb-4">
+              Need data-driven insights?
+            </h2>
+
+            <p class="text-zinc-400 max-w-xl mx-auto mb-8">
+              Looking for clear reports, interactive dashboards, or data analysis? I focus on practical solutions that
+              help you understand your data and answer business questions.
+            </p>
+
+            <a href="index.html#contact"
+              class="inline-flex items-center gap-2 btn-primary bg-accent text-white font-medium px-8 py-3.5 rounded-full hover:bg-accent-light transition-colors">
+              Get in Touch →
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-zinc-100 dark:border-zinc-900">
+    <div class="max-w-6xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+
+      <p class="text-sm text-zinc-400 text-center sm:text-left">
+        © <span id="year"></span> Ahsan Chowdhury. All rights reserved.
+        <br>
+        Designed &amp; Developed by Ahsan Chowdhury
+      </p>
+
+      <p class="text-xs text-zinc-500 text-center sm:text-right">
+        Analyze. Visualize. Optimize.
+      </p>
+
+    </div>
+  </footer>
+
+  <script>
+    // Current Year
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // Reveal Animation
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.08,
+      rootMargin: "0px 0px -30px 0px"
+    });
+
+    document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+  </script>
+
+</body>
+
+</html>
